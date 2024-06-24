@@ -17,41 +17,34 @@ public class PrepareAnvil implements Listener {
         final AnvilInventory anvilInventory = event.getInventory();
         final ItemStack firstItem = anvilInventory.getItem(0);
         final ItemStack secondItem = anvilInventory.getItem(1);
-        final ItemStack eventResultItem = event.getResult();
+        ItemStack resultItem = event.getResult();
 
-        if (isItemInvalid(firstItem) || isItemInvalid(secondItem)) return;
-
+        if (isItemInvalid(firstItem) || isItemInvalid(secondItem) || isItemInvalid(resultItem)) return;
 
         if (isDamageable(firstItem) && isEnchantedBookWithMending(secondItem)) {
-            repairItem(event, firstItem);
+            resultItem = repairItem(resultItem);
         }
 
-        if (isItemInvalid(eventResultItem)) return;
-
-        if (isMendingResult(eventResultItem)) {
-            removeMending(eventResultItem, event);
+        if (isResultMending(resultItem)) {
+            resultItem = removeMending(resultItem);
         }
-    }
-
-    private void repairItem(PrepareAnvilEvent event, ItemStack firstItem) {
-        if (!(firstItem.getItemMeta() instanceof Damageable)) return;
-
-        ItemStack resultItem = event.getResult();
-        Damageable resultItemMeta = (Damageable) resultItem.getItemMeta();
-
-        if (resultItemMeta == null) return;
-
-        resultItemMeta.setDamage(0);
-        resultItemMeta.removeEnchant(Enchantment.MENDING);
-        resultItem.setItemMeta(resultItemMeta);
 
         event.setResult(resultItem);
     }
 
-    private void removeMending(ItemStack eventResultItem, PrepareAnvilEvent event) {
-        eventResultItem.removeEnchantment(Enchantment.MENDING);
+    private ItemStack repairItem(ItemStack resultItem) {
+        Damageable resultItemMeta = (Damageable) resultItem.getItemMeta();
 
-        event.setResult(eventResultItem);
+        resultItemMeta.setDamage(0);
+        resultItem.setItemMeta(resultItemMeta);
+
+        return resultItem;
+    }
+
+    private ItemStack removeMending(ItemStack resultItem) {
+        resultItem.removeEnchantment(Enchantment.MENDING);
+
+        return resultItem;
     }
 
     private boolean isItemInvalid(ItemStack item) {
@@ -62,8 +55,8 @@ public class PrepareAnvil implements Listener {
         return item.getItemMeta() instanceof Damageable;
     }
 
-    private boolean isMendingResult(ItemStack eventResultItem) {
-        return (eventResultItem.getEnchantments().containsKey(Enchantment.MENDING));
+    private boolean isResultMending(ItemStack resultItem) {
+        return (resultItem.getEnchantments().containsKey(Enchantment.MENDING));
     }
 
     private boolean isEnchantedBookWithMending(ItemStack item) {
