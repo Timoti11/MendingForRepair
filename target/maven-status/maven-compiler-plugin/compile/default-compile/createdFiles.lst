@@ -1,0 +1,4 @@
+net\timoti11\mendingforrepair\events\EntityPickupItem.class
+net\timoti11\mendingforrepair\events\InventoryClick.class
+net\timoti11\mendingforrepair\MendingForRepair.class
+net\timoti11\mendingforrepair\events\PrepareAnvil.class
