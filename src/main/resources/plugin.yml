@@ -1,4 +1,4 @@
-name: Mending for repair
+name: MendingForRepair
 version: '${project.version}'
 main: net.timoti11.mendingforrepair.MendingForRepair
 api-version: '1.21'
